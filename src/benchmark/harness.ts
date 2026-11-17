@@ -22,8 +22,8 @@ import {
 } from './data';
 
 export type BenchGridName =
-  | 'ag-grid'
   | 'tanstack'
+  | 'ag-grid'
   | 'primevue'
   | 'element-plus'
   | 'infinite';

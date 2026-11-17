@@ -2,7 +2,7 @@
   "name": "vue-datagrid-performance-comparison",
   "version": "1.0.0",
   "private": true,
-  "description": "A reproducible benchmark comparing the AG Grid, TanStack Table, PrimeVue DataTable, Element Plus Table V2 and Infinite Table Vue DataGrids at 300,000 and 1,000,000 rows",
+  "description": "A reproducible benchmark comparing the TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and Infinite Table Vue DataGrids at 300,000 and 1,000,000 rows",
   "repository": {
     "type": "git",
     "url": "https://github.com/infinite-table/vue-datagrid-performance-comparison.git"

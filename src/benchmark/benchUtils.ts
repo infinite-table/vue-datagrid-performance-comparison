@@ -345,8 +345,8 @@ export function bootstrapDiffCI(a: number[], b: number[], iterations = 2000) {
 // ---------------------------------------------------------------------------
 
 export type GridName =
-  | 'ag-grid'
   | 'tanstack'
+  | 'ag-grid'
   | 'primevue'
   | 'element-plus'
   | 'infinite';
@@ -355,8 +355,8 @@ export type OtherGridName = Exclude<GridName, 'infinite'>;
 
 /** the order the grids are listed in, everywhere */
 export const GRID_NAMES: GridName[] = [
-  'ag-grid',
   'tanstack',
+  'ag-grid',
   'primevue',
   'element-plus',
   'infinite',
@@ -367,15 +367,15 @@ export const OTHER_GRID_NAMES = GRID_NAMES.filter(
 
 /** short names, for table headers and logs */
 export const GRID_LABELS: Record<GridName, string> = {
-  'ag-grid': 'AG Grid',
   tanstack: 'TanStack',
+  'ag-grid': 'AG Grid',
   primevue: 'PrimeVue',
   'element-plus': 'Element Plus',
   infinite: 'Infinite',
 };
 export const GRID_FULL_NAMES: Record<GridName, string> = {
-  'ag-grid': 'AG Grid',
   tanstack: 'TanStack Table',
+  'ag-grid': 'AG Grid',
   primevue: 'PrimeVue DataTable',
   'element-plus': 'Element Plus Table V2',
   infinite: 'Infinite Table',
@@ -643,7 +643,7 @@ function bodyHeightLine(env: BenchEnvironment) {
   );
 }
 
-/** e.g. "AG Grid 36.3.0 · ... · Infinite Table 10.1.5" - the grids that were measured */
+/** e.g. "TanStack Table 9.3.1 · ... · Infinite Table 10.1.5" - the grids that were measured */
 export function versionsLine(versions: BenchEnvironment['versions']) {
   return GRID_NAMES.filter((grid) => versions[grid])
     .map((grid) => `${GRID_FULL_NAMES[grid]} ${versions[grid]}`)

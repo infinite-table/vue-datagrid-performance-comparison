@@ -67,7 +67,7 @@ const compare = (a, b) => a.localeCompare(b, 'en', { numeric: true });
 
 // what a run is called: in its commit message and in its "failed" issue
 const describe = (v) =>
-  `AG Grid ${v.agGrid}, TanStack Table ${v.tanstack}, PrimeVue ${v.primevue}, Element Plus ${v.elementPlus}, Infinite Table ${v.infinite}`;
+  `TanStack Table ${v.tanstack}, AG Grid ${v.agGrid}, PrimeVue ${v.primevue}, Element Plus ${v.elementPlus}, Infinite Table ${v.infinite}`;
 const failureTitle = (versions) => `Benchmark failed: ${describe(versions)}`;
 
 function hasOpenFailureIssue(title) {

@@ -1,12 +1,12 @@
-# Vue DataGrid performance comparison: AG Grid, TanStack Table, PrimeVue DataTable, Element Plus Table V2 and Infinite Table
+# Vue DataGrid performance comparison: TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and Infinite Table
 
 A reproducible benchmark of five Vue 3 DataGrids at 300,000 and 1,000,000
 rows: mount time, memory, sorting and scrolling.
 
-- [AG Grid Vue](https://www.ag-grid.com/vue-data-grid/) (Community)
 - [TanStack Table](https://tanstack.com/table), which is headless, rendered
   with [TanStack Virtual](https://tanstack.com/virtual) as in its official
   virtualization example
+- [AG Grid Vue](https://www.ag-grid.com/vue-data-grid/) (Community)
 - [PrimeVue DataTable](https://primevue.org/datatable/), in its virtual
   scroller mode
 - [Element Plus Table V2](https://element-plus.org/en-US/component/table-v2.html),
@@ -35,7 +35,7 @@ explained in [What is compared](#what-is-compared):
   sorting numbers are the browser's `Array.prototype.sort` plus the table
   rendering the result.
 - **PrimeVue DataTable and Element Plus Table V2 don't virtualize columns.**
-  Every rendered row has all the 20 cells. AG Grid, the TanStack page and
+  Every rendered row has all the 20 cells. The TanStack page, AG Grid and
   Infinite Table render only the columns in view.
 - **With 1,000,000 rows, only AG Grid and Infinite Table can scroll to the
   last row.** TanStack Table (with TanStack Virtual), PrimeVue DataTable and
@@ -218,8 +218,8 @@ The versions that are measured are the ones installed in `node_modules`. The
 report records them.
 
 ```sh
-npm install ag-grid-community@<version> ag-grid-vue3@<version>
 npm install @tanstack/vue-table@<version> @tanstack/vue-virtual@<version>
+npm install ag-grid-community@<version> ag-grid-vue3@<version>
 # PrimeVue 4 goes with @primeuix/themes 2, PrimeVue 5 with @primeuix/themes 3
 npm install primevue@<version> @primeuix/themes@<version>
 npm install element-plus@<version>
@@ -230,16 +230,16 @@ BENCH_HEADLESS=1 npm run benchmark
 
 Keep `ag-grid-community` and `ag-grid-vue3` on the same version.
 
-To measure only some of the grids, name them: `BENCH_GRIDS=ag-grid,infinite`
-(`ag-grid`, `tanstack`, `primevue`, `element-plus`, `infinite`).
+To measure only some of the grids, name them: `BENCH_GRIDS=tanstack,infinite`
+(`tanstack`, `ag-grid`, `primevue`, `element-plus`, `infinite`).
 
 ## How the results above are kept up to date
 
 The [Benchmark workflow](./.github/workflows/benchmark.yml) runs on GitHub
 Actions:
 
-- every 6 hours it looks on npm for a new version of `ag-grid-vue3`,
-  `@tanstack/vue-table`, `primevue` (4.x only), `element-plus` or
+- every 6 hours it looks on npm for a new version of
+  `@tanstack/vue-table`, `ag-grid-vue3`, `primevue` (4.x only), `element-plus` or
   `@infinite-table/infinite-vue`. When there is one, it installs it, runs the
   whole benchmark and commits the results
 - it can also be started by hand, for any versions of the five: Actions >
@@ -281,7 +281,7 @@ npm run benchmark:serve     # or: npm run dev
 
 Then open [localhost:4173](http://localhost:4173) (`npm run dev`:
 [localhost:5173](http://localhost:5173)) for the list - a page for each grid
-and size: `/benchmark/<grid>-<size>`, where the grid is `ag-grid`, `tanstack`,
+and size: `/benchmark/<grid>-<size>`, where the grid is `tanstack`, `ag-grid`,
 `primevue`, `element-plus` or `infinite` and the size is `300k` or `1m`. If
 the port is taken, pick another one with
 `npm run benchmark:serve -- --port 4000`.
@@ -307,6 +307,8 @@ Each grid is on its defaults. Only what makes the layouts identical is set:
 
 What is set for each grid, and why:
 
+- **TanStack Table:** see below, and
+  [`TanStackGrid.vue`](./src/benchmark/TanStackGrid.vue).
 - **AG Grid:** the Quartz theme, all Community modules, `animateRows: false`
   (the other grids don't animate rows on sort, and the animation would make
   "sorted rows visible" ambiguous) and a `getRowId` (the other grids have a
@@ -315,8 +317,6 @@ What is set for each grid, and why:
   objects, to detach them from Vue's reactivity - that copy is part of its
   mount time and of its memory. See
   [`AgGridBenchmark.vue`](./src/benchmark/AgGridBenchmark.vue).
-- **TanStack Table:** see below, and
-  [`TanStackGrid.vue`](./src/benchmark/TanStackGrid.vue).
 - **PrimeVue DataTable:** see below, and
   [`PrimeVueGrid.vue`](./src/benchmark/PrimeVueGrid.vue).
 - **Element Plus Table V2:** see below, and
@@ -443,10 +443,10 @@ and table.
 The string column is lowercase a-z text, and the browser runs as `en-US`. The
 five don't compare strings the same way by default:
 
-- **AG Grid** compares character codes (`<`), which puts "Zebra" before
-  "apple".
 - **TanStack Table** picks its `text` sorting for this column: it compares the
   lowercased values by character code.
+- **AG Grid** compares character codes (`<`), which puts "Zebra" before
+  "apple".
 - **PrimeVue DataTable** uses the order of the browser's locale (an
   `Intl.Collator`, with the `numeric` option).
 - **Element Plus Table V2** does not sort - the page compares character codes
@@ -460,7 +460,7 @@ Sorting a number column doesn't depend on any of this.
 
 ## License keys
 
-AG Grid Community, TanStack Table and Element Plus need no license key, and
+TanStack Table, AG Grid Community and Element Plus need no license key, and
 Infinite Table for Vue shows nothing different without one.
 
 PrimeVue is measured at its newest 4.x version (the `v4-stable` tag on npm),
@@ -549,7 +549,7 @@ the screencast in particular adds overhead.
 | ---------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------- |
 | `BENCH_SIZES`                                  | `300k,1m`        | dataset sizes to run                                                                               |
 | `BENCH_SCENARIOS`                              | all              | comma separated scenario ids, e.g. `mount,scroll-jump`                                             |
-| `BENCH_GRIDS`                                  | all              | comma separated grids, at least two of `ag-grid`, `tanstack`, `primevue`, `element-plus`, `infinite` |
+| `BENCH_GRIDS`                                  | all              | comma separated grids, at least two of `tanstack`, `ag-grid`, `primevue`, `element-plus`, `infinite` |
 | `BENCH_RUNS` / `BENCH_WARMUP`                  | `7` / `1`        | measured / discarded runs per grid per scenario                                                    |
 | `BENCH_CPU_THROTTLE`                           | `1`              | CDP CPU throttling rate during measurements - `4` is closer to a mid-range laptop                  |
 | `BENCH_HEADLESS`                               | off              | `1` = Chromium's new headless mode (headed by default - closest to real vsync and GPU)             |
@@ -589,7 +589,7 @@ with the list of grids changed - the two can be compared file by file.
 If you find a flaw in the methodology, a setting that unfairly favors one
 grid, or a scenario that's missing, please
 [open an issue](https://github.com/infinite-table/vue-datagrid-performance-comparison/issues)
-or send a pull request. That goes double for the AG Grid, TanStack, PrimeVue
+or send a pull request. That goes double for the TanStack, AG Grid, PrimeVue
 and Element Plus teams: if there's a configuration you'd recommend for a fair
 comparison - or a better way to render TanStack Table, or to sort Element Plus
 Table V2 - we'll gladly add it and run the numbers again.

@@ -545,15 +545,25 @@ function compareVersions(a: string | undefined, b: string | undefined) {
 // the history is sorted by the versions, in this order
 const VERSION_ORDER: GridName[] = [
   'infinite',
-  'ag-grid',
   'tanstack',
+  'ag-grid',
   'primevue',
   'element-plus',
 ];
 
+// the order in the names of the branches. It is not the order the grids are
+// listed in: the name of a branch is an identifier, and stays as it is
+const BRANCH_ORDER: GridName[] = [
+  'ag-grid',
+  'tanstack',
+  'primevue',
+  'element-plus',
+  'infinite',
+];
+
 // the same name as in scripts/check-versions.mjs
 function versionBranch(entry: HistoryEntry) {
-  return `versions/${GRID_NAMES.filter((grid) => entry.versions[grid])
+  return `versions/${BRANCH_ORDER.filter((grid) => entry.versions[grid])
     .map((grid) => `${grid}-${entry.versions[grid]}`)
     .join('_')}`;
 }
@@ -578,7 +588,7 @@ function installedVersion(name: string) {
   }
 }
 
-/** e.g. "**AG Grid Vue 36.3.0** (Community), ... and **Infinite Table for Vue 10.1.5**" */
+/** e.g. "**TanStack Table 9.3.1** (with TanStack Virtual), ... and **Infinite Table for Vue 10.1.5**" */
 function describeVersions(entry: HistoryEntry) {
   const describe: Record<GridName, (version: string) => string> = {
     'ag-grid': (v) => `**AG Grid Vue ${v}** (Community)`,

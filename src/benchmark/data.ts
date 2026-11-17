@@ -26,8 +26,7 @@ export type BenchRow = {
   /**
    * random lowercase a-z string - used for the string sort scenario.
    * a-z only, so the default string comparison of every grid (character
-   * codes in AG Grid and TanStack Table, the browser's locale in Infinite
-   * Table and MUI X) gives the same order and the expected result is
+   * codes in some grids, the browser's locale in others) gives the same order and the expected result is
    * unambiguous
    */
   code: string;

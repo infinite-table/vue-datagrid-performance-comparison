@@ -4,12 +4,12 @@ import type { BenchSize } from '../benchmark/data';
 
 // the installed versions - defined in vite.config.ts
 const GRIDS = [
-  { id: 'ag-grid', name: 'AG Grid', version: __AG_GRID_VERSION__ },
   {
     id: 'tanstack',
     name: 'TanStack Table',
     version: __TANSTACK_TABLE_VERSION__,
   },
+  { id: 'ag-grid', name: 'AG Grid', version: __AG_GRID_VERSION__ },
   { id: 'primevue', name: 'PrimeVue DataTable', version: __PRIMEVUE_VERSION__ },
   {
     id: 'element-plus',
@@ -34,7 +34,7 @@ const sizes = Object.keys(BENCH_SIZES) as BenchSize[];
     "
   >
     <h1 style="font-size: 24px">
-      AG Grid, TanStack Table, PrimeVue DataTable, Element Plus Table V2 and
+      TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and
       Infinite Table for Vue - benchmark pages
     </h1>
     <p>

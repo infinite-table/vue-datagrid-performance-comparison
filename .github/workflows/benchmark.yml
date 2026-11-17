@@ -20,11 +20,11 @@ on:
     types: [new-version]
   workflow_dispatch:
     inputs:
-      ag_grid_version:
-        description: 'ag-grid-vue3 + ag-grid-community version'
-        default: latest
       tanstack_version:
         description: '@tanstack/vue-table version'
+        default: latest
+      ag_grid_version:
+        description: 'ag-grid-vue3 + ag-grid-community version'
         default: latest
       primevue_version:
         description: 'primevue version (latest = the newest 4.x)'

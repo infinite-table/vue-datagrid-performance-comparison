@@ -1,5 +1,5 @@
 /**
- * AG Grid, TanStack Table, PrimeVue DataTable, Element Plus Table V2 and
+ * TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and
  * Infinite Table for Vue - performance comparison, for each dataset size
  * (300k and 1M rows - see BENCH_SIZES in data.ts).
  *
@@ -94,7 +94,7 @@ const RUN_ID = process.env.BENCH_RUN_ID || 'local';
 const RESULTS_ROOT = path.resolve(__dirname, '../../benchmark-results');
 const RESULTS_DIR = path.join(RESULTS_ROOT, RUN_ID);
 
-// BENCH_GRIDS=ag-grid,infinite measures only some of the grids
+// BENCH_GRIDS=tanstack,infinite measures only some of the grids
 const GRIDS: GridName[] = process.env.BENCH_GRIDS
   ? GRID_NAMES.filter((grid) =>
       process.env
