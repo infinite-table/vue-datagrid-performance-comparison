@@ -1,0 +1,209 @@
+# Runs the benchmark for new versions of the grids and publishes the results:
+#
+#  - every 6 hours it looks on npm for a new version of any of the five
+#    grids, and measures it
+#  - `repository_dispatch` (type `new-version`) does the same right away -
+#    for a release pipeline that doesn't want to wait for the schedule
+#  - by hand (Actions > Benchmark > Run workflow), for any versions
+#
+# The newest versions go to master: package.json, results/latest, the charts
+# and the summary in the README. Every measured set of versions also gets a
+# branch (versions/ag-grid-<v>_tanstack-<v>_primevue-<v>_element-plus-<v>_infinite-<v>)
+# with the code, the lockfile and the full results of that run, and its rows
+# in the history table on master.
+name: Benchmark
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  repository_dispatch:
+    types: [new-version]
+  workflow_dispatch:
+    inputs:
+      ag_grid_version:
+        description: 'ag-grid-vue3 + ag-grid-community version'
+        default: latest
+      tanstack_version:
+        description: '@tanstack/vue-table version'
+        default: latest
+      primevue_version:
+        description: 'primevue version'
+        default: latest
+      element_plus_version:
+        description: 'element-plus version'
+        default: latest
+      infinite_version:
+        description: '@infinite-table/infinite-vue version'
+        default: latest
+      publish:
+        description: 'Commit the results (off = only upload them as an artifact)'
+        type: boolean
+        default: true
+      sizes:
+        description: 'BENCH_SIZES - empty = all. Partial runs are for trying things out: turn "publish" off'
+        default: ''
+      scenarios:
+        description: 'BENCH_SCENARIOS - empty = all'
+        default: ''
+      runs:
+        description: 'BENCH_RUNS - empty = 7'
+        default: ''
+
+permissions:
+  contents: write
+  issues: write
+
+# one benchmark at a time - two would also push over each other
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Which versions?
+    runs-on: ubuntu-24.04
+    outputs:
+      run: ${{ steps.versions.outputs.run }}
+      ag_grid: ${{ steps.versions.outputs.ag_grid }}
+      tanstack: ${{ steps.versions.outputs.tanstack }}
+      primevue: ${{ steps.versions.outputs.primevue }}
+      element_plus: ${{ steps.versions.outputs.element_plus }}
+      infinite: ${{ steps.versions.outputs.infinite }}
+      newest: ${{ steps.versions.outputs.newest }}
+      branch: ${{ steps.versions.outputs.branch }}
+      title: ${{ steps.versions.outputs.title }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - id: versions
+        run: node scripts/check-versions.mjs
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          AG_GRID: ${{ inputs.ag_grid_version || github.event.client_payload.ag_grid_version }}
+          TANSTACK: ${{ inputs.tanstack_version || github.event.client_payload.tanstack_version }}
+          PRIMEVUE: ${{ inputs.primevue_version || github.event.client_payload.primevue_version }}
+          ELEMENT_PLUS: ${{ inputs.element_plus_version || github.event.client_payload.element_plus_version }}
+          INFINITE: ${{ inputs.infinite_version || github.event.client_payload.infinite_version }}
+          GH_TOKEN: ${{ github.token }}
+
+  benchmark:
+    name: ${{ needs.check.outputs.title }}
+    needs: check
+    if: needs.check.outputs.run == 'true'
+    # pinned, so runs stay comparable for as long as possible
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    env:
+      AG_GRID: ${{ needs.check.outputs.ag_grid }}
+      TANSTACK: ${{ needs.check.outputs.tanstack }}
+      PRIMEVUE: ${{ needs.check.outputs.primevue }}
+      ELEMENT_PLUS: ${{ needs.check.outputs.element_plus }}
+      INFINITE: ${{ needs.check.outputs.infinite }}
+      BRANCH: ${{ needs.check.outputs.branch }}
+      TITLE: ${{ needs.check.outputs.title }}
+      PUBLISH: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        timeout-minutes: 15
+        run: |
+          npm ci
+          npm install --save-exact \
+            "ag-grid-community@$AG_GRID" \
+            "ag-grid-vue3@$AG_GRID" \
+            "@tanstack/vue-table@$TANSTACK" \
+            "primevue@$PRIMEVUE" \
+            "element-plus@$ELEMENT_PLUS" \
+            "@infinite-table/infinite-vue@$INFINITE"
+          npx playwright install chromium
+
+      # Chromium's apt packages. The runner image already has its libraries
+      # and only fonts are missing, so an unreachable Ubuntu mirror must not
+      # hold up or fail the run
+      - name: Install Chromium's system dependencies
+        timeout-minutes: 10
+        continue-on-error: true
+        run: npx playwright install-deps chromium
+
+      # Chromium's sandbox needs unprivileged user namespaces, which the
+      # Ubuntu 24.04 runners restrict - see "Sandboxed Chromium" in the README
+      - name: Allow the Chromium sandbox
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Run the benchmark
+        run: npm run benchmark
+        env:
+          BENCH_HEADLESS: 1
+          BENCH_RUN_ID: ci
+          BENCH_SIZES: ${{ inputs.sizes }}
+          BENCH_SCENARIOS: ${{ inputs.scenarios }}
+          BENCH_RUNS: ${{ inputs.runs }}
+
+      - name: Add the report to the run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/ci/report.md ]; then
+            cat benchmark-results/ci/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: benchmark-results
+          path: benchmark-results/ci
+          if-no-files-found: ignore
+
+      - name: Publish the results
+        if: env.PUBLISH == 'true'
+        env:
+          NEWEST: ${{ needs.check.outputs.newest }}
+          BENCH_RUNNER: GitHub Actions, ubuntu-24.04
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          message="Results: $TITLE"
+          # the branch of these versions: the code, the lockfile and the
+          # full results of this run
+          node --no-warnings scripts/update-results.ts ci
+          git add package.json package-lock.json README.md results
+          git commit -m "$message"
+          git push --force origin "HEAD:refs/heads/$BRANCH"
+
+          if [ "$NEWEST" = "true" ]; then
+            # the newest versions: the same commit goes to master
+            git pull --rebase origin master
+            git push origin HEAD:master
+          else
+            # older versions: master only gets their rows in the history table
+            git fetch origin master
+            git checkout -B master origin/master
+            node --no-warnings scripts/update-results.ts ci --history-only
+            git add README.md results
+            git commit -m "History: $TITLE"
+            git push origin HEAD:master
+          fi
+
+      # a scheduled run does not try the same versions again while this issue
+      # is open
+      - name: Open an issue when the benchmark fails
+        if: failure() && github.event_name != 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Benchmark failed: $TITLE"
+          gh label create benchmark-failed --color B60205 --force \
+            --description "The scheduled benchmark failed for a set of versions"
+          if ! gh issue list --state open --label benchmark-failed --limit 200 \
+              --json title --jq '.[].title' | grep -Fxq "$title"; then
+            gh issue create --title "$title" --label benchmark-failed --body \
+              "The benchmark failed for these versions: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+          Scheduled runs skip these versions while this issue is open. Close it to have them try again."
+          fi
