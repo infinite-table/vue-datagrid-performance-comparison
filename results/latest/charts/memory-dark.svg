@@ -11,8 +11,8 @@
 <path d="M172,116H227.6a4,4 0 0 1 4,4V126a4,4 0 0 1 -4,4H172Z" fill="#c98500"/>
 <text x="240" y="127.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">87.2 MB</text>
 <text x="20" y="145.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#c3c2b7">PrimeVue DataTable</text>
-<path d="M172,134H183a4,4 0 0 1 4,4V144a4,4 0 0 1 -4,4H172Z" fill="#d95926"/>
-<text x="195" y="145.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">22 MB</text>
+<path d="M172,134H182.7a4,4 0 0 1 4,4V144a4,4 0 0 1 -4,4H172Z" fill="#d95926"/>
+<text x="195" y="145.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">21.6 MB</text>
 <text x="20" y="163.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#c3c2b7">Element Plus Table V2</text>
 <path d="M172,152H172a1.9,1.9 0 0 1 1.9,1.9V164.1a1.9,1.9 0 0 1 -1.9,1.9H172Z" fill="#9a63d1"/>
 <text x="182" y="163.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">2.77 MB</text>
@@ -28,8 +28,8 @@
 <path d="M172,240H364.4a4,4 0 0 1 4,4V250a4,4 0 0 1 -4,4H172Z" fill="#c98500"/>
 <text x="376" y="251.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">287 MB</text>
 <text x="20" y="269.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#c3c2b7">PrimeVue DataTable</text>
-<path d="M172,258H183a4,4 0 0 1 4,4V268a4,4 0 0 1 -4,4H172Z" fill="#d95926"/>
-<text x="195" y="269.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">22 MB</text>
+<path d="M172,258H182.8a4,4 0 0 1 4,4V268a4,4 0 0 1 -4,4H172Z" fill="#d95926"/>
+<text x="195" y="269.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">21.6 MB</text>
 <text x="20" y="287.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#c3c2b7">Element Plus Table V2</text>
 <path d="M172,276H172a1.9,1.9 0 0 1 1.9,1.9V288.1a1.9,1.9 0 0 1 -1.9,1.9H172Z" fill="#9a63d1"/>
 <text x="182" y="287.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#f0efec">2.77 MB</text>
