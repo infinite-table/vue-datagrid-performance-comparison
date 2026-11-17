@@ -205,6 +205,7 @@ report records them.
 ```sh
 npm install ag-grid-community@<version> ag-grid-vue3@<version>
 npm install @tanstack/vue-table@<version> @tanstack/vue-virtual@<version>
+# PrimeVue 4 goes with @primeuix/themes 2, PrimeVue 5 with @primeuix/themes 3
 npm install primevue@<version> @primeuix/themes@<version>
 npm install element-plus@<version>
 npm install @infinite-table/infinite-vue@<version>
@@ -223,7 +224,7 @@ The [Benchmark workflow](./.github/workflows/benchmark.yml) runs on GitHub
 Actions:
 
 - every 6 hours it looks on npm for a new version of `ag-grid-vue3`,
-  `@tanstack/vue-table`, `primevue`, `element-plus` or
+  `@tanstack/vue-table`, `primevue` (4.x only), `element-plus` or
   `@infinite-table/infinite-vue`. When there is one, it installs it, runs the
   whole benchmark and commits the results
 - it can also be started by hand, for any versions of the five: Actions >
@@ -350,7 +351,8 @@ page follows the "Virtual Scroll" example of its
 scroller of `DataTable` supports the vertical orientation only, and every
 rendered row has all the 20 cells.
 
-**PrimeVue 5 asks for a license key** - see [License keys](#license-keys).
+**The benchmark measures PrimeVue 4**, the last MIT-licensed major version.
+PrimeVue 5 asks for a license key - see [License keys](#license-keys).
 
 ### Element Plus Table V2: no sorting of its own
 
@@ -446,14 +448,18 @@ Sorting a number column doesn't depend on any of this.
 AG Grid Community, TanStack Table and Element Plus need no license key, and
 Infinite Table for Vue shows nothing different without one.
 
-PrimeVue 5 is distributed under the PrimeUI license, which asks for a license
-key (there is a free Community license for those who qualify - see its
-[licenses](https://primeui.dev/licenses)). The benchmark has no key: PrimeVue
-then logs "PrimeUI license is not configured" and shows an "Invalid PrimeUI
-License" badge in the bottom-right corner of the page, outside the box of the
-grid. The table itself renders and behaves the same, as far as we could see.
-If you have a key, set it as the PrimeVue documentation says, in
-[`primevue.ts`](./src/benchmark/primevue.ts), and build again.
+PrimeVue is measured at its newest 4.x version (the `v4-stable` tag on npm),
+which is MIT-licensed and needs no key. PrimeVue 5 is distributed under the
+PrimeUI license, which asks for a license key (there is a free Community
+license for those who qualify - see its
+[licenses](https://primeui.dev/licenses)). Without a key, PrimeVue 5 logs
+"PrimeUI license is not configured" and shows an "Invalid PrimeUI License"
+badge in the bottom-right corner of the page, so the benchmark doesn't use it.
+
+To measure PrimeVue 5 with your own key, install `primevue@5` and
+`@primeuix/themes@3`, set the key as the PrimeVue documentation says, in
+[`primevue.ts`](./src/benchmark/primevue.ts), and build again. The scheduled
+runs only look for new 4.x versions.
 
 ## Methodology
 

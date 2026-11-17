@@ -8,7 +8,8 @@
  *   EVENT_NAME      schedule | workflow_dispatch | repository_dispatch
  *   AG_GRID         version of ag-grid-vue3 + ag-grid-community ("" or "latest" = latest on npm)
  *   TANSTACK        version of @tanstack/vue-table (same)
- *   PRIMEVUE        version of primevue (same)
+ *   PRIMEVUE        version of primevue ("" or "latest" = latest 4.x on npm,
+ *                   its `v4-stable` tag - see "License keys" in the README)
  *   ELEMENT_PLUS    version of element-plus (same)
  *   INFINITE        version of @infinite-table/infinite-vue (same)
  *   GH_TOKEN        to look for an open "benchmark failed" issue
@@ -96,7 +97,13 @@ function hasOpenFailureIssue(title) {
 
 const agGrid = await resolve('ag-grid-vue3', process.env.AG_GRID);
 const tanstack = await resolve('@tanstack/vue-table', process.env.TANSTACK);
-const primevue = await resolve('primevue', process.env.PRIMEVUE);
+// PrimeVue 5 asks for a license key, so the benchmark stays on the newest 4.x
+const PRIMEVUE_TAG = 'v4-stable';
+const wantedPrimevue = process.env.PRIMEVUE;
+const primevue = await resolve(
+  'primevue',
+  !wantedPrimevue || wantedPrimevue === 'latest' ? PRIMEVUE_TAG : wantedPrimevue,
+);
 const elementPlus = await resolve('element-plus', process.env.ELEMENT_PLUS);
 const infinite = await resolve(
   '@infinite-table/infinite-vue',

@@ -21,14 +21,14 @@
   },
   "dependencies": {
     "@infinite-table/infinite-vue": "10.1.5",
-    "@primeuix/themes": "3.1.1",
+    "@primeuix/themes": "2.0.3",
     "@tanstack/vue-table": "9.3.1",
     "@tanstack/vue-virtual": "3.13.52",
     "ag-grid-community": "36.3.0",
     "ag-grid-vue3": "36.3.0",
     "element-plus": "2.14.8",
     "normalize.css": "8.0.1",
-    "primevue": "5.0.5",
+    "primevue": "4.5.5",
     "vue": "3.5.45"
   },
   "devDependencies": {
