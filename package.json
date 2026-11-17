@@ -1,0 +1,42 @@
+{
+  "name": "vue-datagrid-performance-comparison",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A reproducible benchmark comparing the AG Grid, TanStack Table, PrimeVue DataTable, Element Plus Table V2 and Infinite Table Vue DataGrids at 300,000 and 1,000,000 rows",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/infinite-table/vue-datagrid-performance-comparison.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "benchmark": "npm run benchmark:build && npm run benchmark:run",
+    "benchmark:build": "vite build",
+    "benchmark:run": "playwright test",
+    "benchmark:serve": "vite preview",
+    "results": "node --no-warnings scripts/update-results.ts",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "dependencies": {
+    "@infinite-table/infinite-vue": "10.1.5",
+    "@primeuix/themes": "3.1.1",
+    "@tanstack/vue-table": "9.3.1",
+    "@tanstack/vue-virtual": "3.13.52",
+    "ag-grid-community": "36.3.0",
+    "ag-grid-vue3": "36.3.0",
+    "element-plus": "2.14.8",
+    "normalize.css": "8.0.1",
+    "primevue": "5.0.5",
+    "vue": "3.5.45"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.52.0",
+    "@types/node": "22.18.8",
+    "@vitejs/plugin-vue": "6.0.11",
+    "typescript": "5.7.2",
+    "vite": "8.3.8",
+    "vue-tsc": "3.3.14"
+  }
+}
