@@ -165,8 +165,8 @@ npx playwright install chromium
 BENCH_HEADLESS=1 npm run benchmark
 ```
 
-A full run is 9 scenarios × 2 sizes × 5 grids × 8 runs, and takes more than
-an hour. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
+A full run is 9 scenarios × 2 sizes × 5 grids × 8 runs: about an hour and a
+half on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
 what users see, but you have to leave the machine alone while they come and
 go.
 
