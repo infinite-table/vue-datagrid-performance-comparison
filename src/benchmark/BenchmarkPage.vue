@@ -9,6 +9,8 @@ import {
 import type { BenchRow } from './data';
 import { installBenchmark } from './harness';
 import type { BenchAdapter } from './harness';
+import { getBenchView } from './updates';
+import type { BenchView } from './updates';
 
 /**
  * Identical shell for every grid: generates the data (outside of any
@@ -23,6 +25,11 @@ import type { BenchAdapter } from './harness';
  * all the grids a body of the same height (so they render the same number of
  * rows) when one of them shows something the others don't - e.g. the footer
  * Infinite Table renders when it has no license key.
+ *
+ * `?view=sorted` (`filtered`, `grouped`) - the grid mounts with that
+ * sorting / filter / grouping, for the scenarios with live updates. The grid
+ * gets the view in the slot props, and gives the page the function that hands
+ * it changed rows with `onUpdater`.
  */
 const props = defineProps<{
   title: string;
@@ -31,7 +38,19 @@ const props = defineProps<{
 }>();
 
 defineSlots<{
-  default(props: { data: BenchRow[]; width: number; height: number }): any;
+  default(props: {
+    /** the rows, in the order of the data (by id) */
+    data: BenchRow[];
+    width: number;
+    height: number;
+    /** sorting / filter / grouping to mount with - see updates.ts */
+    view: BenchView;
+    /**
+     * the grid gives the page the function that hands it changed rows (new
+     * objects, in place of the ones with the same id), once it can take them
+     */
+    onUpdater: (update: (rows: BenchRow[]) => void) => void;
+  }): any;
 }>();
 
 // shallowRef: the rows are plain objects and stay that way - a `ref` would
@@ -41,12 +60,19 @@ const mounted = ref(false);
 let isMounted = false;
 const info = ref('generating data...');
 const extraHeight = ref(0);
+const view = ref<BenchView>('plain');
+let updater: ((rows: BenchRow[]) => void) | null = null;
+const onUpdater = (update: (rows: BenchRow[]) => void) => {
+  updater = update;
+};
 let uninstall: (() => void) | null = null;
 
 onMounted(() => {
   const start = performance.now();
   const rows = generateBenchData(props.rowCount);
   const dataGenerationTime = performance.now() - start;
+  const params = new URLSearchParams(window.location.search);
+  view.value = getBenchView(window.location.search);
 
   uninstall = installBenchmark(
     props.adapter,
@@ -56,20 +82,26 @@ onMounted(() => {
         mounted.value = true;
       },
       isMounted: () => isMounted,
+      view: view.value,
+      update: (rows) => {
+        if (!updater) {
+          throw new Error('The grid cannot take updates yet');
+        }
+        updater(rows);
+      },
     },
     rows,
     dataGenerationTime,
   );
 
-  info.value = `${props.title} · ${rows.length.toLocaleString(
-    'en-US',
-  )} rows · data generated in ${Math.round(dataGenerationTime)}ms · ${
+  info.value = `${props.title} · ${rows.length.toLocaleString('en-US')} rows${
+    view.value === 'plain' ? '' : ` · ${view.value}`
+  } · data generated in ${Math.round(dataGenerationTime)}ms · ${
     process.env.NODE_ENV
   } build${__DEV__ ? ' · __DEV__ on' : ''}`;
   data.value = rows;
 
   // set before the grid mounts, so mounting is not followed by a resize
-  const params = new URLSearchParams(window.location.search);
   extraHeight.value = Math.max(0, Number(params.get('extraHeight')) || 0);
 
   const autoMount = params.get('autoMount') !== '0';
@@ -102,6 +134,8 @@ onBeforeUnmount(() => uninstall?.());
       :data="data"
       :width="BENCH_GRID_WIDTH"
       :height="BENCH_GRID_HEIGHT + extraHeight"
+      :view="view"
+      :onUpdater="onUpdater"
     />
   </div>
   <div

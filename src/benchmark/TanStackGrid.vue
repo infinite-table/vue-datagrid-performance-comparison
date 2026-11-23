@@ -10,13 +10,27 @@
  *  - sortDescFirst: false - by default the first click on a number column
  *    sorts descending; in the other grids it sorts ascending
  *  - data-row-index / data-column-id on the cells, for the harness
+ *
+ * For the live-update scenarios (see updates.ts) the filtered view adds the
+ * column filtering feature and the grouped view the grouping and aggregation
+ * features, as in the official "filters" and "grouping" examples - the other
+ * views keep the features above, so nothing changes for the other scenarios.
+ * The groups are collapsed: the page has no row expanding. Rows are changed
+ * through the `data` option: a new array, with the changed rows in it.
  */
-import { computed, ref } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 import {
   FlexRender,
+  aggregationFn_sum,
+  columnFilteringFeature,
+  columnGroupingFeature,
   columnSizingFeature,
   createColumnHelper,
+  createFilteredRowModel,
+  createGroupedRowModel,
   createSortedRowModel,
+  filterFn_greaterThanOrEqualTo,
+  rowAggregationFeature,
   rowSortingFeature,
   sortFn_alphanumeric,
   sortFn_text,
@@ -32,8 +46,22 @@ import {
   BENCH_ROW_HEIGHT,
 } from './data';
 import type { BenchRow } from './data';
+import {
+  BENCH_AGGREGATE_FIELD,
+  BENCH_FILTER_FIELD,
+  BENCH_FILTER_MIN,
+  BENCH_GROUP_FIELD,
+  BENCH_SORT_DIR,
+  BENCH_SORT_FIELD,
+  applyBenchUpdates,
+} from './updates';
+import type { BenchView } from './updates';
 
-const props = defineProps<{ data: BenchRow[] }>();
+const props = defineProps<{
+  data: BenchRow[];
+  view: BenchView;
+  onUpdater: (update: (rows: BenchRow[]) => void) => void;
+}>();
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -56,10 +84,71 @@ const columns = columnHelper.columns(
   ),
 );
 
+const filteringFeatures = tableFeatures({
+  ...features,
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { greaterThanOrEqualTo: filterFn_greaterThanOrEqualTo },
+});
+const groupingFeatures = tableFeatures({
+  ...features,
+  columnGroupingFeature,
+  rowAggregationFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: { sum: aggregationFn_sum },
+});
+
+// one setup per view - the features, the columns and the state to start with
+const setups: Partial<
+  Record<BenchView, { features: any; columns: any; initialState?: any }>
+> = {
+  plain: { features, columns },
+  sorted: {
+    features,
+    columns,
+    initialState: {
+      sorting: [{ id: BENCH_SORT_FIELD, desc: BENCH_SORT_DIR === -1 }],
+    },
+  },
+  filtered: {
+    features: filteringFeatures,
+    columns: BENCH_COLUMNS.map((c) => ({
+      accessorKey: c.field,
+      header: c.header,
+      size: BENCH_COLUMN_WIDTH,
+      ...(c.field === BENCH_FILTER_FIELD
+        ? { filterFn: 'greaterThanOrEqualTo' }
+        : null),
+    })),
+    initialState: {
+      columnFilters: [{ id: BENCH_FILTER_FIELD, value: BENCH_FILTER_MIN }],
+    },
+  },
+  grouped: {
+    features: groupingFeatures,
+    // only the salary is aggregated, like in the other grids
+    columns: BENCH_COLUMNS.map((c) => ({
+      accessorKey: c.field,
+      header: c.header,
+      size: BENCH_COLUMN_WIDTH,
+      aggregationFn: c.field === BENCH_AGGREGATE_FIELD ? 'sum' : undefined,
+    })),
+    initialState: { grouping: [BENCH_GROUP_FIELD] },
+  },
+};
+const setup = setups[props.view]!;
+
+// shallowRef: the rows stay plain objects
+const data = shallowRef(props.data);
+props.onUpdater((changed) => {
+  data.value = applyBenchUpdates(data.value, changed);
+});
+
 const table = useTable({
-  features,
-  columns,
-  data: computed(() => props.data),
+  features: setup.features as typeof features,
+  columns: setup.columns,
+  initialState: setup.initialState,
+  data: computed(() => data.value),
   getRowId: (row: BenchRow) => String(row.id),
   sortDescFirst: false,
 });

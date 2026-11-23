@@ -84,8 +84,14 @@ defineProps<{ rowCount: number }>();
     :title="`Element Plus Table V2 ${adapter.version}`"
     :rowCount="rowCount"
     :adapter="adapter"
-    v-slot="{ data, width, height }"
+    v-slot="{ data, width, height, view, onUpdater }"
   >
-    <ElementPlusGrid :data="data" :width="width" :height="height" />
+    <ElementPlusGrid
+      :data="data"
+      :width="width"
+      :height="height"
+      :view="view"
+      :onUpdater="onUpdater"
+    />
   </BenchmarkPage>
 </template>

@@ -94,7 +94,7 @@ jobs:
     if: needs.check.outputs.run == 'true'
     # pinned, so runs stay comparable for as long as possible
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    timeout-minutes: 360
     env:
       AG_GRID: ${{ needs.check.outputs.ag_grid }}
       TANSTACK: ${{ needs.check.outputs.tanstack }}

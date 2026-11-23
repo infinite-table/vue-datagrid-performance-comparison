@@ -79,8 +79,8 @@ defineProps<{ rowCount: number }>();
     :title="`PrimeVue DataTable ${adapter.version}`"
     :rowCount="rowCount"
     :adapter="adapter"
-    v-slot="{ data }"
+    v-slot="{ data, view, onUpdater }"
   >
-    <PrimeVueGrid :data="data" />
+    <PrimeVueGrid :data="data" :view="view" :onUpdater="onUpdater" />
   </BenchmarkPage>
 </template>

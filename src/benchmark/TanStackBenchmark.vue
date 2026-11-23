@@ -65,8 +65,8 @@ defineProps<{ rowCount: number }>();
     :title="title"
     :rowCount="rowCount"
     :adapter="adapter"
-    v-slot="{ data }"
+    v-slot="{ data, view, onUpdater }"
   >
-    <TanStackGrid :data="data" />
+    <TanStackGrid :data="data" :view="view" :onUpdater="onUpdater" />
   </BenchmarkPage>
 </template>

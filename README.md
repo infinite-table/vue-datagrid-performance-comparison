@@ -1,7 +1,8 @@
 # Vue DataGrid performance comparison: TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and Infinite Table
 
 A reproducible benchmark of five Vue 3 DataGrids at 300,000 and 1,000,000
-rows: mount time, memory, sorting and scrolling.
+rows: mount time, memory, sorting, scrolling and live data updates - with
+the rows as they are, sorted, filtered, and grouped with aggregations.
 
 - [TanStack Table](https://tanstack.com/table), which is headless, rendered
   with [TanStack Virtual](https://tanstack.com/virtual) as in its official
@@ -180,8 +181,8 @@ npx playwright install chromium
 BENCH_HEADLESS=1 npm run benchmark
 ```
 
-A full run is 9 scenarios × 2 sizes × 5 grids × 8 runs: about an hour and a
-half on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
+A full run is 17 scenarios × 2 sizes × 5 grids × 8 runs (the 2 grouped ones
+with 2 grids): about four hours on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
 what users see, but you have to leave the machine alone while they come and
 go.
 
@@ -433,10 +434,78 @@ The report has these numbers for every run, under each size.
 | `correctness-vertical`   | during a very fast vertical scroll: is every cell there, and is it the right one?          |
 | `correctness-horizontal` | the same, horizontally                                                                     |
 | `visual-blank-vertical`  | a screencast of a very fast scroll: how many blank rows does the compositor actually show? |
+| `updates-low`            | live updates, one at a time: update to rows painted                                        |
+| `updates-low-sorted`     | the same, with the rows sorted by the column that changes                                  |
+| `updates-low-filtered`   | the same, with the rows filtered on the column that changes                                |
+| `updates-low-grouped`    | the same, with the rows grouped and the changing column summed (TanStack, Infinite)        |
+| `updates-high`           | a feed of 50 updates a second: lag at the end, update delay, frame rate, main-thread work  |
+| `updates-high-sorted`    | the same, sorted                                                                           |
+| `updates-high-filtered`  | the same, filtered                                                                         |
+| `updates-high-grouped`   | the same, grouped (TanStack, Infinite)                                                     |
 
-Every grid runs every scenario at both sizes. A grid that a scenario could
-not run for would have no samples for it, and would be missing from its chart
-and table.
+Every grid runs every scenario at both sizes, except the grouped ones - see
+[Live updates](#live-updates).
+
+### Live updates
+
+Rows change while the grid shows them - like prices in a trading blotter.
+An update changes four number fields (`salary`, `bonus`, `hours`, `score`, by
+up to ±1%) in new copies of some rows: random rows, plus all the rows in the
+viewport, so that every update changes what is on screen. Every grid gets the
+same updates ([`updates.ts`](./src/benchmark/updates.ts)), worked out before
+anything is measured, and each one is checked on screen: the right rows, with
+the new values, in the right order.
+
+The grid shows the rows in one of four views, set when it mounts:
+
+- **as they are** - in the order of the data
+- **sorted** by the salary, highest first - the updates change the salaries,
+  so rows move
+- **filtered** to a salary of at least 115,000, about half of the rows - rows
+  go in and out of the filter
+- **grouped** by department (10 collapsed groups), with the sum of the
+  salaries of each group in the salary column - the sums change. Only
+  TanStack Table and Infinite Table are measured here: AG Grid has row
+  grouping and aggregation in Enterprise, PrimeVue DataTable groups rows for
+  display but leaves the aggregations to the page, and Element Plus Table V2
+  has no grouping.
+
+and the updates come in one of two ways:
+
+- **low frequency** (`updates-low-*`): 10 updates of 1,000 random rows each,
+  one at a time - each one 500 ms after the previous one is painted. Measured
+  from sending the update to the first frame that shows it.
+- **high frequency** (`updates-high-*`): a feed of 50 updates a second, of
+  100 random rows each, for 4 seconds. The page hands the grid the updates
+  once per animation frame - all those that arrived since the previous frame,
+  as one update, the way an app buffers the messages of a socket. A grid that
+  keeps the main thread busy gets them later, and more at once. Measured: the
+  lag at the end (from the last update to the frame that shows it), how late
+  the updates get to the grid, the frame rate and the main-thread work.
+
+Each grid gets the rows the way it documents for changing them:
+
+- **TanStack Table:** a new `data` array (in a `shallowRef`). The filtered
+  view adds its column filtering feature, and the grouped view its grouping
+  and aggregation features (only the salary is aggregated, as in the other
+  grid); the other views keep the features of the other scenarios. There is
+  no row expanding, so the groups stay collapsed.
+- **AG Grid:** `api.applyTransaction({ update: rows })`. The views are its
+  `initialState` sort and filter models, with the number filter on the salary
+  column.
+- **PrimeVue DataTable:** a new `value` array. The views are its `sortField`
+  / `sortOrder` and `filters` props (with no filter UI in the header).
+- **Element Plus Table V2:** a new `data` array. It does not sort or filter,
+  so in the sorted and filtered views the page sorts and filters the rows -
+  again on every update, as it does when a header is clicked.
+- **Infinite Table:** `dataSourceApi.updateDataArray(rows)`. The views are
+  `defaultSortInfo`, `defaultFilterValue` (with `showColumnFilters: false`,
+  so the header stays as high as in the other grids), and `groupBy` with an
+  `aggregationReducers` sum and collapsed groups.
+
+For the grids that take a new array, making it (a copy of the million rows,
+with the changed ones in it) is part of what is measured - it is what an app
+does with them.
 
 ### String sorting
 
@@ -556,6 +625,10 @@ the screencast in particular adds overhead.
 | `BENCH_NO_SANDBOX`                             | off              | `1` = run Chromium without its sandbox (where the sandbox can't start, e.g. some containers)       |
 | `BENCH_SCROLL_SPEED` / `BENCH_SCROLL_DISTANCE` | `8000` / `24000` | wheel gesture (px/s, px) for the smoothness scenarios                                              |
 | `BENCH_FAST_SCROLL_SPEED`                      | `20000`          | the fast gesture of the correctness / screencast scenarios                                         |
+| `BENCH_LOW_UPDATES` / `BENCH_LOW_UPDATE_ROWS`  | `10` / `1000`    | low-frequency updates: how many, and the random rows each one changes                              |
+| `BENCH_LOW_UPDATE_PAUSE`                       | `500`            | ms between an update being painted and the next one                                                |
+| `BENCH_HIGH_UPDATE_RATE`                       | `50`             | high-frequency feed: updates a second                                                              |
+| `BENCH_HIGH_UPDATE_ROWS` / `BENCH_HIGH_UPDATE_SECONDS` | `100` / `4` | the random rows each update of the feed changes, and how long the feed lasts                  |
 | `BENCH_SAVE_TRACES`                            | off              | `1` = save every trace to `benchmark-results/<run id>/traces`                                      |
 | `BENCH_VERBOSE`                                | off              | `1` = log the last DOM mutations ("settled") and the first wrong samples of the probes             |
 | `BENCH_RUN_ID`                                 | ISO date         | results folder name                                                                                |
@@ -568,6 +641,7 @@ the screencast in particular adds overhead.
 | `src/pages/benchmark/<grid>-<size>.ts`                  | the pages that are measured, one for each grid and size                                 |
 | `src/main.ts`                                           | loads the page of the URL - and only that page                                          |
 | `src/benchmark/data.ts`                                 | the deterministic dataset                                                               |
+| `src/benchmark/updates.ts`                              | the views (sorted, filtered, grouped) and the changes of the live-update scenarios      |
 | `src/benchmark/<Grid>Benchmark.vue`                     | each grid's page: its DOM adapter + the grid (AG Grid and Infinite Table have it inline) |
 | `src/benchmark/<Grid>Grid.vue`                          | the TanStack, PrimeVue and Element Plus tables                                          |
 | `src/benchmark/BenchmarkPage.vue`, `harness.ts`         | identical page shell; `window.__bench` - what the spec calls in the page                |
