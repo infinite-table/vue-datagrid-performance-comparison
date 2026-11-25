@@ -182,7 +182,7 @@ BENCH_HEADLESS=1 npm run benchmark
 ```
 
 A full run is 17 scenarios × 2 sizes × 5 grids × 8 runs (the 2 grouped ones
-with 2 grids): about four hours on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
+with 2 grids): about three and a half hours on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
 what users see, but you have to leave the machine alone while they come and
 go.
 
@@ -481,7 +481,11 @@ and the updates come in one of two ways:
   as one update, the way an app buffers the messages of a socket. A grid that
   keeps the main thread busy gets them later, and more at once. Measured: the
   lag at the end (from the last update to the frame that shows it), how late
-  the updates get to the grid, the frame rate and the main-thread work.
+  the updates get to the grid, and the main-thread work. The frame rate, the
+  gaps between frames and the blocking time come from the trace (the frames
+  the main thread committed, and the part over 50 ms of every task), not from
+  the page: a main thread blocked for seconds gets few rAF callbacks or Long
+  Animation Frame entries to measure with.
 
 Each grid gets the rows the way it documents for changing them:
 
