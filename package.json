@@ -20,7 +20,7 @@
     "node": ">=20.19"
   },
   "dependencies": {
-    "@infinite-table/infinite-vue": "10.2.0",
+    "@infinite-table/infinite-vue": "10.2.1",
     "@primeuix/themes": "2.0.3",
     "@tanstack/vue-table": "9.3.1",
     "@tanstack/vue-virtual": "3.13.52",
