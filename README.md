@@ -1,7 +1,7 @@
 # Vue DataGrid performance comparison: TanStack Table, AG Grid, PrimeVue DataTable, Element Plus Table V2 and Infinite Table
 
-A reproducible benchmark of five Vue 3 DataGrids at 300,000 and 1,000,000
-rows: mount time, memory, sorting, scrolling and live data updates - with
+A reproducible benchmark of five Vue 3 DataGrids at 1,000,000 rows: mount
+time, memory, sorting, scrolling and live data updates - with
 the rows as they are, sorted, filtered, and grouped with aggregations.
 
 - [TanStack Table](https://tanstack.com/table), which is headless, rendered
@@ -60,17 +60,12 @@ The absolute numbers depend on the machine - compare the grids, not the millisec
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/mount-dark.svg">
-  <img src="results/latest/charts/mount-light.svg" width="760" alt="Mount time (lower is better). First rows painted, 300k rows: TanStack Table 215 ms, AG Grid 747 ms, PrimeVue DataTable 481 ms, Element Plus Table V2 43.3 ms, Infinite Table 229 ms; Settled (no more DOM changes), 300k rows: TanStack Table 215 ms, AG Grid 850 ms, PrimeVue DataTable 481 ms, Element Plus Table V2 43.3 ms, Infinite Table 238 ms; First rows painted, 1M rows: TanStack Table 614 ms, AG Grid 2,382 ms, PrimeVue DataTable 891 ms, Element Plus Table V2 48.6 ms, Infinite Table 527 ms; Settled, 1M rows: TanStack Table 614 ms, AG Grid 2,486 ms, PrimeVue DataTable 891 ms, Element Plus Table V2 48.6 ms, Infinite Table 539 ms.">
+  <img src="results/latest/charts/mount-light.svg" width="760" alt="Mount time (lower is better). First rows painted, 1M rows: TanStack Table 614 ms, AG Grid 2,382 ms, PrimeVue DataTable 891 ms, Element Plus Table V2 48.6 ms, Infinite Table 527 ms; Settled (no more DOM changes), 1M rows: TanStack Table 614 ms, AG Grid 2,486 ms, PrimeVue DataTable 891 ms, Element Plus Table V2 48.6 ms, Infinite Table 539 ms.">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/memory-dark.svg">
-  <img src="results/latest/charts/memory-light.svg" width="760" alt="Memory: JavaScript heap retained by the grid (lower is better). 300k rows: TanStack Table 87.2 MB, AG Grid 204 MB, PrimeVue DataTable 21.6 MB, Element Plus Table V2 2.77 MB, Infinite Table 36.7 MB; 1M rows: TanStack Table 287 MB, AG Grid 670 MB, PrimeVue DataTable 21.6 MB, Element Plus Table V2 2.77 MB, Infinite Table 90.8 MB.">
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/sort-300k-dark.svg">
-  <img src="results/latest/charts/sort-300k-light.svg" width="760" alt="Sorting 300,000 rows: click to sorted rows painted (lower is better). String column, ascending: TanStack Table 998 ms, AG Grid 1,013 ms, PrimeVue DataTable 2,590 ms, Element Plus Table V2 244 ms, Infinite Table 411 ms; String column, descending: TanStack Table 975 ms, AG Grid 979 ms, PrimeVue DataTable 2,624 ms, Element Plus Table V2 250 ms, Infinite Table 403 ms; Number column, ascending: TanStack Table 806 ms, AG Grid 1,014 ms, PrimeVue DataTable 2,296 ms, Element Plus Table V2 171 ms, Infinite Table 231 ms; Number column, descending: TanStack Table 754 ms, AG Grid 999 ms, PrimeVue DataTable 2,306 ms, Element Plus Table V2 178 ms, Infinite Table 210 ms.">
+  <img src="results/latest/charts/memory-light.svg" width="760" alt="Memory: JavaScript heap retained by the grid (lower is better). 1M rows: TanStack Table 287 MB, AG Grid 670 MB, PrimeVue DataTable 21.6 MB, Element Plus Table V2 2.77 MB, Infinite Table 90.8 MB.">
 </picture>
 
 <picture>
@@ -82,34 +77,24 @@ The string column is lowercase a-z text, sorted in an `en-US` browser. The grids
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/scroll-jump-dark.svg">
-  <img src="results/latest/charts/scroll-jump-light.svg" width="760" alt="Jumping to a far-away scroll position (lower is better). 300k rows: TanStack Table 12.2 ms, AG Grid 23.5 ms, PrimeVue DataTable 254 ms, Element Plus Table V2 33.3 ms, Infinite Table 30.5 ms; 1M rows: TanStack Table 13.5 ms, AG Grid 26.9 ms, PrimeVue DataTable 262 ms, Element Plus Table V2 32.6 ms, Infinite Table 32 ms.">
+  <img src="results/latest/charts/scroll-jump-light.svg" width="760" alt="Jumping to a far-away scroll position (lower is better). 1M rows: TanStack Table 13.5 ms, AG Grid 26.9 ms, PrimeVue DataTable 262 ms, Element Plus Table V2 32.6 ms, Infinite Table 32 ms.">
 </picture>
 
 With 1M rows, the last row that can be scrolled to is not the last row of the data in: TanStack Table (row 838,860), PrimeVue DataTable (row 838,881), Element Plus Table V2 (row 838,861). AG Grid and Infinite Table reach the last row. See [Scroll range](#scroll-range).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/scroll-frames-dark.svg">
-  <img src="results/latest/charts/scroll-frames-light.svg" width="760" alt="Vertical scrolling: frames fully presented (higher is better). 300k rows: TanStack Table 100%, AG Grid 100%, PrimeVue DataTable 14.2%, Element Plus Table V2 50.1%, Infinite Table 61.6%; 1M rows: TanStack Table 100%, AG Grid 64.9%, PrimeVue DataTable 13.3%, Element Plus Table V2 50%, Infinite Table 80.7%.">
+  <img src="results/latest/charts/scroll-frames-light.svg" width="760" alt="Vertical scrolling: frames fully presented (higher is better). 1M rows: TanStack Table 100%, AG Grid 64.9%, PrimeVue DataTable 13.3%, Element Plus Table V2 50%, Infinite Table 80.7%.">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/scroll-vertical-work-dark.svg">
-  <img src="results/latest/charts/scroll-vertical-work-light.svg" width="760" alt="Vertical scrolling, 300k rows: main-thread work (lower is better). Layout: TanStack Table 70.3 ms, AG Grid 201 ms, PrimeVue DataTable 96 ms, Element Plus Table V2 102 ms, Infinite Table 54.6 ms; Style recalculation: TanStack Table 35.1 ms, AG Grid 102 ms, PrimeVue DataTable 57.5 ms, Element Plus Table V2 91 ms, Infinite Table 162 ms; All tasks: TanStack Table 770 ms, AG Grid 1,024 ms, PrimeVue DataTable 3,247 ms, Element Plus Table V2 2,023 ms, Infinite Table 1,287 ms.">
+  <img src="results/latest/charts/scroll-vertical-work-light.svg" width="760" alt="Vertical scrolling, 1M rows: main-thread work (lower is better). Layout: TanStack Table 69.7 ms, AG Grid 363 ms, PrimeVue DataTable 88.6 ms, Element Plus Table V2 111 ms, Infinite Table 69.5 ms; Style recalculation: TanStack Table 35.6 ms, AG Grid 114 ms, PrimeVue DataTable 60.5 ms, Element Plus Table V2 97.4 ms, Infinite Table 204 ms; All tasks: TanStack Table 798 ms, AG Grid 1,490 ms, PrimeVue DataTable 3,186 ms, Element Plus Table V2 2,088 ms, Infinite Table 1,624 ms.">
 </picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/scroll-horizontal-work-dark.svg">
-  <img src="results/latest/charts/scroll-horizontal-work-light.svg" width="760" alt="Horizontal scrolling, 300k rows: main-thread work (lower is better). Layout: TanStack Table 47.2 ms, AG Grid 66.9 ms, PrimeVue DataTable 0 ms, Element Plus Table V2 0 ms, Infinite Table 21.4 ms; Style recalculation: TanStack Table 14.4 ms, AG Grid 33.2 ms, PrimeVue DataTable 0 ms, Element Plus Table V2 8.8 ms, Infinite Table 27.9 ms; All tasks: TanStack Table 427 ms, AG Grid 507 ms, PrimeVue DataTable 38.6 ms, Element Plus Table V2 937 ms, Infinite Table 359 ms.">
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/updates-low-300k-dark.svg">
-  <img src="results/latest/charts/updates-low-300k-light.svg" width="760" alt="Live updates, 300,000 rows: update to rows painted (lower is better). Rows as they are: TanStack Table 136 ms, AG Grid 33.8 ms, PrimeVue DataTable 266 ms, Element Plus Table V2 14.8 ms, Infinite Table 99.7 ms; Sorted by the salary, which the updates change: TanStack Table 833 ms, AG Grid 1,062 ms, PrimeVue DataTable 2,075 ms, Element Plus Table V2 161 ms, Infinite Table 160 ms; Filtered on the salary: TanStack Table 301 ms, AG Grid 77.9 ms, PrimeVue DataTable 242 ms, Element Plus Table V2 24.3 ms, Infinite Table 93.1 ms; Grouped by department, salaries summed: TanStack Table 455 ms, Infinite Table 223 ms.">
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="results/latest/charts/updates-high-300k-dark.svg">
-  <img src="results/latest/charts/updates-high-300k-light.svg" width="760" alt="A feed of 50 updates a second, 300,000 rows: lag at the end (lower is better). Rows as they are: TanStack Table 246 ms, AG Grid 34.1 ms, PrimeVue DataTable 408 ms, Element Plus Table V2 24.3 ms, Infinite Table 151 ms; Sorted by the salary, which the updates change: TanStack Table 1,686 ms, AG Grid 2,510 ms, PrimeVue DataTable 2,899 ms, Element Plus Table V2 275 ms, Infinite Table 216 ms; Filtered on the salary: TanStack Table 493 ms, AG Grid 121 ms, PrimeVue DataTable 275 ms, Element Plus Table V2 34.4 ms, Infinite Table 149 ms; Grouped by department, salaries summed: TanStack Table 917 ms, Infinite Table 482 ms.">
+  <img src="results/latest/charts/scroll-horizontal-work-light.svg" width="760" alt="Horizontal scrolling, 1M rows: main-thread work (lower is better). Layout: TanStack Table 40 ms, AG Grid 56.2 ms, PrimeVue DataTable 0 ms, Element Plus Table V2 0 ms, Infinite Table 19.1 ms; Style recalculation: TanStack Table 12 ms, AG Grid 30.2 ms, PrimeVue DataTable 0 ms, Element Plus Table V2 6.19 ms, Infinite Table 25.1 ms; All tasks: TanStack Table 335 ms, AG Grid 381 ms, PrimeVue DataTable 29.2 ms, Element Plus Table V2 887 ms, Infinite Table 402 ms.">
 </picture>
 
 <picture>
@@ -137,38 +122,21 @@ With 1M rows, the last row that can be scrolled to is not the last row of the da
 
 | | TanStack Table | AG Grid | PrimeVue DataTable | Element Plus Table V2 | Infinite Table | Infinite Table vs each grid |
 |---|---:|---:|---:|---:|---:|---|
-| Mount - First rows painted, 300k rows | 215 ms | 747 ms | 481 ms | 43.3 ms | 229 ms | vs TanStack Table: **TanStack Table** 6% lower<br>vs AG Grid: **Infinite Table** 3.27× lower<br>vs PrimeVue DataTable: **Infinite Table** 2.1× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 5.28× lower |
-| Mount - Settled (no more DOM changes), 300k rows | 215 ms | 850 ms | 481 ms | 43.3 ms | 238 ms | vs TanStack Table: **TanStack Table** 10% lower<br>vs AG Grid: **Infinite Table** 3.57× lower<br>vs PrimeVue DataTable: **Infinite Table** 2.02× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 5.5× lower |
 | Mount - First rows painted, 1M rows | 614 ms | 2,382 ms | 891 ms | 48.6 ms | 527 ms | vs TanStack Table: **Infinite Table** 14% lower<br>vs AG Grid: **Infinite Table** 4.52× lower<br>vs PrimeVue DataTable: **Infinite Table** 41% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 10.8× lower |
-| Mount - Settled, 1M rows | 614 ms | 2,486 ms | 891 ms | 48.6 ms | 539 ms | vs TanStack Table: **Infinite Table** 12% lower<br>vs AG Grid: **Infinite Table** 4.61× lower<br>vs PrimeVue DataTable: **Infinite Table** 39% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 11.1× lower |
-| Memory - 300k rows | 87.2 MB | 204 MB | 21.6 MB | 2.77 MB | 36.7 MB | vs TanStack Table: **Infinite Table** 2.37× lower<br>vs AG Grid: **Infinite Table** 5.55× lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 41% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 13.3× lower |
+| Mount - Settled (no more DOM changes), 1M rows | 614 ms | 2,486 ms | 891 ms | 48.6 ms | 539 ms | vs TanStack Table: **Infinite Table** 12% lower<br>vs AG Grid: **Infinite Table** 4.61× lower<br>vs PrimeVue DataTable: **Infinite Table** 39% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 11.1× lower |
 | Memory - 1M rows | 287 MB | 670 MB | 21.6 MB | 2.77 MB | 90.8 MB | vs TanStack Table: **Infinite Table** 3.17× lower<br>vs AG Grid: **Infinite Table** 7.38× lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 4.2× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 32.8× lower |
-| Sort, 300k rows - String column, ascending | 998 ms | 1,013 ms | 2,590 ms | 244 ms | 411 ms | vs TanStack Table: **Infinite Table** 2.43× lower<br>vs AG Grid: **Infinite Table** 2.46× lower<br>vs PrimeVue DataTable: **Infinite Table** 6.3× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 41% lower |
-| Sort, 300k rows - String column, descending | 975 ms | 979 ms | 2,624 ms | 250 ms | 403 ms | vs TanStack Table: **Infinite Table** 2.42× lower<br>vs AG Grid: **Infinite Table** 2.43× lower<br>vs PrimeVue DataTable: **Infinite Table** 6.51× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 38% lower |
-| Sort, 300k rows - Number column, ascending | 806 ms | 1,014 ms | 2,296 ms | 171 ms | 231 ms | vs TanStack Table: **Infinite Table** 3.49× lower<br>vs AG Grid: **Infinite Table** 4.39× lower<br>vs PrimeVue DataTable: **Infinite Table** 9.93× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 26% lower |
-| Sort, 300k rows - Number column, descending | 754 ms | 999 ms | 2,306 ms | 178 ms | 210 ms | vs TanStack Table: **Infinite Table** 3.59× lower<br>vs AG Grid: **Infinite Table** 4.75× lower<br>vs PrimeVue DataTable: **Infinite Table** 11× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 16% lower |
 | Sort, 1M rows - String column, ascending | 3,833 ms | 4,140 ms | 9,962 ms | 934 ms | 1,449 ms | vs TanStack Table: **Infinite Table** 2.65× lower<br>vs AG Grid: **Infinite Table** 2.86× lower<br>vs PrimeVue DataTable: **Infinite Table** 6.88× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 36% lower |
 | Sort, 1M rows - String column, descending | 3,767 ms | 4,140 ms | 9,967 ms | 1,001 ms | 1,510 ms | vs TanStack Table: **Infinite Table** 2.49× lower<br>vs AG Grid: **Infinite Table** 2.74× lower<br>vs PrimeVue DataTable: **Infinite Table** 6.6× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 34% lower |
 | Sort, 1M rows - Number column, ascending | 3,356 ms | 4,514 ms | 8,885 ms | 626 ms | 569 ms | vs TanStack Table: **Infinite Table** 5.9× lower<br>vs AG Grid: **Infinite Table** 7.94× lower<br>vs PrimeVue DataTable: **Infinite Table** 15.6× lower<br>vs Element Plus Table V2: **Infinite Table** 9% lower |
 | Sort, 1M rows - Number column, descending | 3,417 ms | 4,489 ms | 9,070 ms | 695 ms | 576 ms | vs TanStack Table: **Infinite Table** 5.93× lower<br>vs AG Grid: **Infinite Table** 7.79× lower<br>vs PrimeVue DataTable: **Infinite Table** 15.7× lower<br>vs Element Plus Table V2: **Infinite Table** 17% lower |
-| Jump to rows painted - 300k rows | 12.2 ms | 23.5 ms | 254 ms | 33.3 ms | 30.5 ms | vs TanStack Table: **TanStack Table** 2.49× lower<br>vs AG Grid: **AG Grid** 23% lower<br>vs PrimeVue DataTable: **Infinite Table** 8.35× lower<br>vs Element Plus Table V2: **Infinite Table** 8% lower |
 | Jump to rows painted - 1M rows | 13.5 ms | 26.9 ms | 262 ms | 32.6 ms | 32 ms | vs TanStack Table: **TanStack Table** 2.37× lower<br>vs AG Grid: **AG Grid** 16% lower<br>vs PrimeVue DataTable: **Infinite Table** 8.17× lower<br>vs Element Plus Table V2: **Infinite Table** 2% lower |
-| Vertical scrolling, frames fully presented - 300k rows | 100% | 100% | 14.2% | 50.1% | 61.6% | vs TanStack Table: **TanStack Table** 38.4 points higher<br>vs AG Grid: no significant difference<br>vs PrimeVue DataTable: **Infinite Table** 47.4 points higher<br>vs Element Plus Table V2: **Infinite Table** 11.5 points higher |
 | Vertical scrolling, frames fully presented - 1M rows | 100% | 64.9% | 13.3% | 50% | 80.7% | vs TanStack Table: **TanStack Table** 19.3 points higher<br>vs AG Grid: **Infinite Table** 15.7 points higher<br>vs PrimeVue DataTable: **Infinite Table** 67.4 points higher<br>vs Element Plus Table V2: **Infinite Table** 30.7 points higher |
-| Vertical scrolling, 300k rows, main-thread work - Layout | 70.3 ms | 201 ms | 96 ms | 102 ms | 54.6 ms | vs TanStack Table: **Infinite Table** 22% lower<br>vs AG Grid: **Infinite Table** 3.68× lower<br>vs PrimeVue DataTable: **Infinite Table** 43% lower<br>vs Element Plus Table V2: **Infinite Table** 46% lower |
-| Vertical scrolling, 300k rows, main-thread work - Style recalculation | 35.1 ms | 102 ms | 57.5 ms | 91 ms | 162 ms | vs TanStack Table: **TanStack Table** 4.61× lower<br>vs AG Grid: **AG Grid** 37% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 2.81× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 44% lower |
-| Vertical scrolling, 300k rows, main-thread work - All tasks | 770 ms | 1,024 ms | 3,247 ms | 2,023 ms | 1,287 ms | vs TanStack Table: **TanStack Table** 40% lower<br>vs AG Grid: **AG Grid** 20% lower<br>vs PrimeVue DataTable: **Infinite Table** 2.52× lower<br>vs Element Plus Table V2: **Infinite Table** 36% lower |
-| Horizontal scrolling, 300k rows, main-thread work - Layout | 47.2 ms | 66.9 ms | 0 ms | 0 ms | 21.4 ms | vs TanStack Table: **Infinite Table** 2.2× lower<br>vs AG Grid: **Infinite Table** 3.13× lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 100% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 100% lower |
-| Horizontal scrolling, 300k rows, main-thread work - Style recalculation | 14.4 ms | 33.2 ms | 0 ms | 8.8 ms | 27.9 ms | vs TanStack Table: **TanStack Table** 48% lower<br>vs AG Grid: **Infinite Table** 16% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 100% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 3.18× lower |
-| Horizontal scrolling, 300k rows, main-thread work - All tasks | 427 ms | 507 ms | 38.6 ms | 937 ms | 359 ms | vs TanStack Table: **Infinite Table** 16% lower<br>vs AG Grid: **Infinite Table** 29% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 9.3× lower<br>vs Element Plus Table V2: **Infinite Table** 2.61× lower |
-| Live updates, 300k rows - Rows as they are | 136 ms | 33.8 ms | 266 ms | 14.8 ms | 99.7 ms | vs TanStack Table: **Infinite Table** 27% lower<br>vs AG Grid: **AG Grid** 2.95× lower<br>vs PrimeVue DataTable: **Infinite Table** 2.67× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 6.73× lower |
-| Live updates, 300k rows - Sorted by the salary, which the updates change | 833 ms | 1,062 ms | 2,075 ms | 161 ms | 160 ms | vs TanStack Table: **Infinite Table** 5.22× lower<br>vs AG Grid: **Infinite Table** 6.65× lower<br>vs PrimeVue DataTable: **Infinite Table** 13× lower<br>vs Element Plus Table V2: no significant difference |
-| Live updates, 300k rows - Filtered on the salary | 301 ms | 77.9 ms | 242 ms | 24.3 ms | 93.1 ms | vs TanStack Table: **Infinite Table** 3.23× lower<br>vs AG Grid: **AG Grid** 16% lower<br>vs PrimeVue DataTable: **Infinite Table** 2.6× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 3.83× lower |
-| Live updates, 300k rows - Grouped by department, salaries summed | 455 ms | – | – | – | 223 ms | vs TanStack Table: **Infinite Table** 2.04× lower |
-| A feed of 50 updates a second, 300k rows, lag at the end - Rows as they are | 246 ms | 34.1 ms | 408 ms | 24.3 ms | 151 ms | vs TanStack Table: no significant difference<br>vs AG Grid: **AG Grid** 4.43× lower<br>vs PrimeVue DataTable: **Infinite Table** 2.7× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 6.22× lower |
-| A feed of 50 updates a second, 300k rows, lag at the end - Sorted by the salary, which the updates change | 1,686 ms | 2,510 ms | 2,899 ms | 275 ms | 216 ms | vs TanStack Table: **Infinite Table** 7.81× lower<br>vs AG Grid: **Infinite Table** 11.6× lower<br>vs PrimeVue DataTable: **Infinite Table** 13.4× lower<br>vs Element Plus Table V2: **Infinite Table** 22% lower |
-| A feed of 50 updates a second, 300k rows, lag at the end - Filtered on the salary | 493 ms | 121 ms | 275 ms | 34.4 ms | 149 ms | vs TanStack Table: **Infinite Table** 3.3× lower<br>vs AG Grid: no significant difference<br>vs PrimeVue DataTable: **Infinite Table** 46% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 4.35× lower |
-| A feed of 50 updates a second, 300k rows, lag at the end - Grouped by department, salaries summed | 917 ms | – | – | – | 482 ms | vs TanStack Table: **Infinite Table** 47% lower |
+| Vertical scrolling, 1M rows, main-thread work - Layout | 69.7 ms | 363 ms | 88.6 ms | 111 ms | 69.5 ms | vs TanStack Table: no significant difference<br>vs AG Grid: **Infinite Table** 5.23× lower<br>vs PrimeVue DataTable: **Infinite Table** 22% lower<br>vs Element Plus Table V2: **Infinite Table** 37% lower |
+| Vertical scrolling, 1M rows, main-thread work - Style recalculation | 35.6 ms | 114 ms | 60.5 ms | 97.4 ms | 204 ms | vs TanStack Table: **TanStack Table** 5.71× lower<br>vs AG Grid: **AG Grid** 44% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 3.37× lower<br>vs Element Plus Table V2: **Element Plus Table V2** 2.09× lower |
+| Vertical scrolling, 1M rows, main-thread work - All tasks | 798 ms | 1,490 ms | 3,186 ms | 2,088 ms | 1,624 ms | vs TanStack Table: **TanStack Table** 2.04× lower<br>vs AG Grid: **AG Grid** 8% lower<br>vs PrimeVue DataTable: **Infinite Table** 49% lower<br>vs Element Plus Table V2: **Infinite Table** 22% lower |
+| Horizontal scrolling, 1M rows, main-thread work - Layout | 40 ms | 56.2 ms | 0 ms | 0 ms | 19.1 ms | vs TanStack Table: **Infinite Table** 2.1× lower<br>vs AG Grid: **Infinite Table** 2.94× lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 100% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 100% lower |
+| Horizontal scrolling, 1M rows, main-thread work - Style recalculation | 12 ms | 30.2 ms | 0 ms | 6.19 ms | 25.1 ms | vs TanStack Table: **TanStack Table** 2.08× lower<br>vs AG Grid: **Infinite Table** 17% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 100% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 4.05× lower |
+| Horizontal scrolling, 1M rows, main-thread work - All tasks | 335 ms | 381 ms | 29.2 ms | 887 ms | 402 ms | vs TanStack Table: **TanStack Table** 17% lower<br>vs AG Grid: **AG Grid** 5% lower<br>vs PrimeVue DataTable: **PrimeVue DataTable** 13.8× lower<br>vs Element Plus Table V2: **Infinite Table** 2.2× lower |
 | Live updates, 1M rows - Rows as they are | 463 ms | 124 ms | 684 ms | 18.1 ms | 366 ms | vs TanStack Table: **Infinite Table** 21% lower<br>vs AG Grid: **AG Grid** 2.96× lower<br>vs PrimeVue DataTable: **Infinite Table** 47% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 20.2× lower |
 | Live updates, 1M rows - Sorted by the salary, which the updates change | 4,077 ms | 5,611 ms | 8,962 ms | 671 ms | 536 ms | vs TanStack Table: **Infinite Table** 7.6× lower<br>vs AG Grid: **Infinite Table** 10.5× lower<br>vs PrimeVue DataTable: **Infinite Table** 16.7× lower<br>vs Element Plus Table V2: **Infinite Table** 20% lower |
 | Live updates, 1M rows - Filtered on the salary | 1,472 ms | 280 ms | 568 ms | 46.2 ms | 310 ms | vs TanStack Table: **Infinite Table** 4.74× lower<br>vs AG Grid: **AG Grid** 10% lower<br>vs PrimeVue DataTable: **Infinite Table** 45% lower<br>vs Element Plus Table V2: **Element Plus Table V2** 6.72× lower |
@@ -194,28 +162,28 @@ Every metric of every scenario, with standard deviations and confidence interval
 
 Every set of versions measured so far, newest first, with a row for each grid. All the values are times in ms, except memory, in MB - lower is better. Runs measured on different machines can't be compared in absolute terms (hosted runners don't all have the same CPU) - compare how the grids relate within a run. The branch of a run has the code, the lockfile and the full results of that run.
 
-| Run | Grid | Mount 1M | Sort string 1M | Sort number 1M | Memory 1M | Vertical scroll work 300k | Horizontal scroll work 300k | Update sorted 1M | Feed lag sorted 1M |
+| Run | Grid | Mount 1M | Sort string 1M | Sort number 1M | Memory 1M | Vertical scroll work 1M | Horizontal scroll work 1M | Update sorted 1M | Feed lag sorted 1M |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2026-11-25<br>GitHub Actions, ubuntu-24.04 · Intel(R) Xeon(R) 6975P-C × 4<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.2.1) | TanStack Table 9.3.1 | 614 | 3,833 | 3,356 | 287 | 770 | 427 | 4,077 | 5,262 |
-|  | AG Grid 36.3.0 | 2,382 | 4,140 | 4,514 | 670 | 1,024 | 507 | 5,611 | 7,669 |
-|  | PrimeVue DataTable 4.5.5 | 891 | 9,962 | 8,885 | 21.6 | 3,247 | 38.6 | 8,962 | 15,156 |
-|  | Element Plus Table V2 2.14.8 | 48.6 | 934 | 626 | 2.77 | 2,023 | 937 | 671 | 1,228 |
-|  | Infinite Table 10.2.1 | 527 | 1,449 | 569 | 90.8 | 1,287 | 359 | 536 | 984 |
-| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 9V45 96-Core Processor × 4<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.2.0) | TanStack Table 9.3.1 | 512 | 3,520 | 3,446 | 287 | 811 | 416 | – | – |
-|  | AG Grid 36.3.0 | 2,221 | 4,250 | 4,171 | 670 | 1,155 | 509 | – | – |
-|  | PrimeVue DataTable 4.5.5 | 731 | 8,643 | 8,133 | 21.7 | 3,155 | 27.2 | – | – |
-|  | Element Plus Table V2 2.14.8 | 41.5 | 920 | 653 | 2.77 | 2,233 | 992 | – | – |
-|  | Infinite Table 10.2.0 | 488 | 1,540 | 1,339 | 90.8 | 1,490 | 350 | – | – |
-| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 9V74 80-Core Processor × 2<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-5.0.5_element-plus-2.14.8_infinite-10.1.5) | TanStack Table 9.3.1 | 936 | 4,292 | 3,487 | 287 | 1,083 | 565 | – | – |
-|  | AG Grid 36.3.0 | 3,147 | 3,950 | 3,866 | 670 | 1,388 | 700 | – | – |
-|  | PrimeVue DataTable 5.0.5 | 610 | 10,592 | 8,536 | 22 | 3,213 | 33.6 | – | – |
-|  | Element Plus Table V2 2.14.8 | 74 | 1,003 | 649 | 2.77 | 2,730 | 1,286 | – | – |
-|  | Infinite Table 10.1.5 | 614 | 1,894 | 1,427 | 90.7 | 1,991 | 526 | – | – |
-| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 7763 64-Core Processor × 2<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.1.5) | TanStack Table 9.3.1 | 1,166 | 4,693 | 3,866 | 287 | 1,329 | 659 | – | – |
-|  | AG Grid 36.3.0 | 3,828 | 3,992 | 3,997 | 670 | 1,736 | 815 | – | – |
-|  | PrimeVue DataTable 4.5.5 | 1,474 | 14,191 | 11,704 | 21.6 | 3,686 | 31.3 | – | – |
-|  | Element Plus Table V2 2.14.8 | 95.2 | 1,157 | 761 | 2.77 | 2,989 | 1,666 | – | – |
-|  | Infinite Table 10.1.5 | 732 | 2,202 | 1,572 | 90.7 | 2,442 | 656 | – | – |
+| 2026-11-25<br>GitHub Actions, ubuntu-24.04 · Intel(R) Xeon(R) 6975P-C × 4<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.2.1) | TanStack Table 9.3.1 | 614 | 3,833 | 3,356 | 287 | 798 | 335 | 4,077 | 5,262 |
+|  | AG Grid 36.3.0 | 2,382 | 4,140 | 4,514 | 670 | 1,490 | 381 | 5,611 | 7,669 |
+|  | PrimeVue DataTable 4.5.5 | 891 | 9,962 | 8,885 | 21.6 | 3,186 | 29.2 | 8,962 | 15,156 |
+|  | Element Plus Table V2 2.14.8 | 48.6 | 934 | 626 | 2.77 | 2,088 | 887 | 671 | 1,228 |
+|  | Infinite Table 10.2.1 | 527 | 1,449 | 569 | 90.8 | 1,624 | 402 | 536 | 984 |
+| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 9V45 96-Core Processor × 4<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.2.0) | TanStack Table 9.3.1 | 512 | 3,520 | 3,446 | 287 | 860 | 357 | – | – |
+|  | AG Grid 36.3.0 | 2,221 | 4,250 | 4,171 | 670 | 1,589 | 465 | – | – |
+|  | PrimeVue DataTable 4.5.5 | 731 | 8,643 | 8,133 | 21.7 | 3,086 | 36.3 | – | – |
+|  | Element Plus Table V2 2.14.8 | 41.5 | 920 | 653 | 2.77 | 2,124 | 1,019 | – | – |
+|  | Infinite Table 10.2.0 | 488 | 1,540 | 1,339 | 90.8 | 1,781 | 440 | – | – |
+| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 9V74 80-Core Processor × 2<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-5.0.5_element-plus-2.14.8_infinite-10.1.5) | TanStack Table 9.3.1 | 936 | 4,292 | 3,487 | 287 | 1,310 | 437 | – | – |
+|  | AG Grid 36.3.0 | 3,147 | 3,950 | 3,866 | 670 | 1,941 | 496 | – | – |
+|  | PrimeVue DataTable 5.0.5 | 610 | 10,592 | 8,536 | 22 | 3,464 | 32.6 | – | – |
+|  | Element Plus Table V2 2.14.8 | 74 | 1,003 | 649 | 2.77 | 2,733 | 1,358 | – | – |
+|  | Infinite Table 10.1.5 | 614 | 1,894 | 1,427 | 90.7 | 2,406 | 674 | – | – |
+| 2026-11-17<br>GitHub Actions, ubuntu-24.04 · AMD EPYC 7763 64-Core Processor × 2<br>[branch](https://github.com/infinite-table/vue-datagrid-performance-comparison/tree/versions/ag-grid-36.3.0_tanstack-9.3.1_primevue-4.5.5_element-plus-2.14.8_infinite-10.1.5) | TanStack Table 9.3.1 | 1,166 | 4,693 | 3,866 | 287 | 1,556 | 536 | – | – |
+|  | AG Grid 36.3.0 | 3,828 | 3,992 | 3,997 | 670 | 2,359 | 602 | – | – |
+|  | PrimeVue DataTable 4.5.5 | 1,474 | 14,191 | 11,704 | 21.6 | 3,618 | 30 | – | – |
+|  | Element Plus Table V2 2.14.8 | 95.2 | 1,157 | 761 | 2.77 | 3,029 | 1,779 | – | – |
+|  | Infinite Table 10.1.5 | 732 | 2,202 | 1,572 | 90.7 | 2,622 | 825 | – | – |
 
 <!-- results:end -->
 
@@ -231,12 +199,14 @@ cd vue-datagrid-performance-comparison
 npm install
 npx playwright install chromium
 
-# production build, then every scenario at 300k and 1M rows
+# production build, then every scenario at 1M rows
 BENCH_HEADLESS=1 npm run benchmark
 ```
 
-A full run is 17 scenarios × 2 sizes × 5 grids × 8 runs (the 2 grouped ones
-with 2 grids): about three and a half hours on a GitHub-hosted runner. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
+A full run is 17 scenarios × 5 grids × 8 runs at 1M rows (the 2 grouped ones
+with 2 grids): about two and a quarter hours on a GitHub-hosted runner.
+`BENCH_SIZES=300k,1m` adds a 300,000 rows dataset, for about another hour
+and ten minutes. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
 what users see, but you have to leave the machine alone while they come and
 go.
 
@@ -345,10 +315,13 @@ the port is taken, pick another one with
 
 Each grid is on its defaults. Only what makes the layouts identical is set:
 
-- **Data:** 300,000 and 1,000,000 rows × 20 columns, generated
-  deterministically ([`data.ts`](./src/benchmark/data.ts)). Every grid imports
-  the same module, and the setup checks a checksum and that all the grids show
-  the same text in the visible cells.
+- **Data:** 1,000,000 rows × 20 columns, generated deterministically
+  ([`data.ts`](./src/benchmark/data.ts)). Every grid imports the same module,
+  and the setup checks a checksum and that all the grids show the same text in
+  the visible cells. Until November 2026 every run also measured 300,000 rows:
+  the grids ranked the same in most results, and scrolling does not depend on
+  the row count, so the runs now measure 1M only - `BENCH_SIZES=300k,1m` adds
+  300k to a run.
 - **The rows are plain objects.** The page keeps the array in a `shallowRef`
   and gives every grid the same, non-reactive array - a `ref` would have Vue
   wrap each of the rows in a reactive proxy, in every grid.
@@ -674,7 +647,7 @@ the screencast in particular adds overhead.
 
 | Variable                                       | Default          |                                                                                                    |
 | ---------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------- |
-| `BENCH_SIZES`                                  | `300k,1m`        | dataset sizes to run                                                                               |
+| `BENCH_SIZES`                                  | `1m`             | dataset sizes to run                                                                               |
 | `BENCH_SCENARIOS`                              | all              | comma separated scenario ids, e.g. `mount,scroll-jump`                                             |
 | `BENCH_GRIDS`                                  | all              | comma separated grids, at least two of `tanstack`, `ag-grid`, `primevue`, `element-plus`, `infinite` |
 | `BENCH_RUNS` / `BENCH_WARMUP`                  | `7` / `1`        | measured / discarded runs per grid per scenario                                                    |
