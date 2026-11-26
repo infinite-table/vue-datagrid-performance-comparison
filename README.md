@@ -203,10 +203,10 @@ npx playwright install chromium
 BENCH_HEADLESS=1 npm run benchmark
 ```
 
-A full run is 17 scenarios × 5 grids × 8 runs at 1M rows (the 2 grouped ones
-with 2 grids): about two and a quarter hours on a GitHub-hosted runner.
-`BENCH_SIZES=300k,1m` adds a 300,000 rows dataset, for about another hour
-and ten minutes. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
+A full run is 17 scenarios × 5 grids × 6 runs - 1 warmup and 5 measured - at
+1M rows (the 2 grouped scenarios with 2 grids): about an hour and a half on a
+GitHub-hosted runner. `BENCH_SIZES=300k,1m` adds a 300,000 rows dataset, for
+about 50 minutes more. Without `BENCH_HEADLESS=1` it opens real browser windows - closer to
 what users see, but you have to leave the machine alone while they come and
 go.
 
@@ -499,7 +499,7 @@ The grid shows the rows in one of four views, set when it mounts:
 
 and the updates come in one of two ways:
 
-- **low frequency** (`updates-low-*`): 10 updates of 1,000 random rows each,
+- **low frequency** (`updates-low-*`): 5 updates of 1,000 random rows each,
   one at a time - each one 500 ms after the previous one is painted. Measured
   from sending the update to the first frame that shows it.
 - **high frequency** (`updates-high-*`): a feed of 50 updates a second, of
@@ -650,13 +650,13 @@ the screencast in particular adds overhead.
 | `BENCH_SIZES`                                  | `1m`             | dataset sizes to run                                                                               |
 | `BENCH_SCENARIOS`                              | all              | comma separated scenario ids, e.g. `mount,scroll-jump`                                             |
 | `BENCH_GRIDS`                                  | all              | comma separated grids, at least two of `tanstack`, `ag-grid`, `primevue`, `element-plus`, `infinite` |
-| `BENCH_RUNS` / `BENCH_WARMUP`                  | `7` / `1`        | measured / discarded runs per grid per scenario                                                    |
+| `BENCH_RUNS` / `BENCH_WARMUP`                  | `5` / `1`        | measured / discarded runs per grid per scenario                                                    |
 | `BENCH_CPU_THROTTLE`                           | `1`              | CDP CPU throttling rate during measurements - `4` is closer to a mid-range laptop                  |
 | `BENCH_HEADLESS`                               | off              | `1` = Chromium's new headless mode (headed by default - closest to real vsync and GPU)             |
 | `BENCH_NO_SANDBOX`                             | off              | `1` = run Chromium without its sandbox (where the sandbox can't start, e.g. some containers)       |
 | `BENCH_SCROLL_SPEED` / `BENCH_SCROLL_DISTANCE` | `8000` / `24000` | wheel gesture (px/s, px) for the smoothness scenarios                                              |
 | `BENCH_FAST_SCROLL_SPEED`                      | `20000`          | the fast gesture of the correctness / screencast scenarios                                         |
-| `BENCH_LOW_UPDATES` / `BENCH_LOW_UPDATE_ROWS`  | `10` / `1000`    | low-frequency updates: how many, and the random rows each one changes                              |
+| `BENCH_LOW_UPDATES` / `BENCH_LOW_UPDATE_ROWS`  | `5` / `1000`     | low-frequency updates: how many, and the random rows each one changes                              |
 | `BENCH_LOW_UPDATE_PAUSE`                       | `500`            | ms between an update being painted and the next one                                                |
 | `BENCH_HIGH_UPDATE_RATE`                       | `50`             | high-frequency feed: updates a second                                                              |
 | `BENCH_HIGH_UPDATE_ROWS` / `BENCH_HIGH_UPDATE_SECONDS` | `100` / `4` | the random rows each update of the feed changes, and how long the feed lasts                  |
