@@ -5,7 +5,7 @@
 <text x="20" y="56" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#6b6a66">after garbage collection · MB · lower is better</text>
 <text x="20" y="90" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#52514e">1M rows</text>
 <text x="20" y="109.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">TanStack Table</text>
-<path d="M172,98H364.4a4,4 0 0 1 4,4V108a4,4 0 0 1 -4,4H172Z" fill="#eda100"/>
+<path d="M172,98H364.5a4,4 0 0 1 4,4V108a4,4 0 0 1 -4,4H172Z" fill="#eda100"/>
 <text x="376" y="109.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#0b0b0b">287 MB</text>
 <text x="20" y="127.5" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#52514e">AG Grid</text>
 <path d="M172,116H626a4,4 0 0 1 4,4V126a4,4 0 0 1 -4,4H172Z" fill="#1baf7a"/>
